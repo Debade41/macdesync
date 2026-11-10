@@ -1,0 +1,31 @@
+{
+  "log": { "level": "info" },
+  "dns": {
+    "servers": [{ "type": "udp", "tag": "dns", "server": "8.8.8.8", "detour": "desync" }]
+  },
+  "inbounds": [
+    {
+      "type": "tun",
+      "tag": "tun",
+      "address": ["172.19.0.1/30"],
+      "mtu": 1500,
+      "auto_route": true,
+      "strict_route": true,
+      "stack": "mixed"
+    }
+  ],
+  "outbounds": [
+    { "type": "socks", "tag": "desync", "server": "127.0.0.1", "server_port": 1080, "version": "5" },
+    { "type": "direct", "tag": "direct" }
+  ],
+  "route": {
+    "auto_detect_interface": true,
+    "rules": [
+      { "action": "sniff" },
+      { "protocol": "dns", "action": "hijack-dns" },
+      { "protocol": "quic", "action": "reject" },
+      { "ip_is_private": true, "outbound": "direct" }
+    ],
+    "final": "desync"
+  }
+}
