@@ -5,3 +5,4 @@ run.log
 *.new
 *.zip
 .DS_Store
+diag.log
